@@ -14,15 +14,15 @@ const app = express();
 // const db = "";
 // const db = "mongodb://localhost:27017/socialweb";
 // const db = require("./config/keys").mongoURI;
-
-// mongoose
-//   .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
-//   .then(() => console.log("MongoDB Connected"))
-//   .catch(err => console.log(err));
-// const users = require("./api/v1/routes/users");
-// const posts = require("./api/v1/routes/posts");
-// app.use(passport.initialize());
-// require("./config/passport")(passport);
+const db = process.env.MONGO_URI || "mongodb://localhost:27017/socialweb";
+mongoose
+  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log(err));
+const users = require("./api/v1/routes/users");
+const posts = require("./api/v1/routes/posts");
+app.use(passport.initialize());
+require("./config/passport")(passport);
 //parse for the jsnon data that will be passed to the frontend clients
 app.use(bodyParser.urlencoded({ extended: false }));
 
