@@ -13,16 +13,16 @@ if (dotenv.error) {
 const app = express();
 // const db = "";
 // const db = "mongodb://localhost:27017/socialweb";
-const db = require("./config/keys").mongoURI;
+// const db = require("./config/keys").mongoURI;
 
-mongoose
-  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log(err));
-const users = require("./api/v1/routes/users");
-const posts = require("./api/v1/routes/posts");
-app.use(passport.initialize());
-require("./config/passport")(passport);
+// mongoose
+//   .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+//   .then(() => console.log("MongoDB Connected"))
+//   .catch(err => console.log(err));
+// const users = require("./api/v1/routes/users");
+// const posts = require("./api/v1/routes/posts");
+// app.use(passport.initialize());
+// require("./config/passport")(passport);
 //parse for the jsnon data that will be passed to the frontend clients
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -33,8 +33,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/users", users);
-app.use("/api/posts", posts);
+// app.use("/api/users", users);
+// app.use("/api/posts", posts);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
