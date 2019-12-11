@@ -33,8 +33,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use("/api/users", users);
-// app.use("/api/posts", posts);
+app.use("/api/users", users);
+app.use("/api/posts", posts);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
