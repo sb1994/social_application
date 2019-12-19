@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { addPost } from "../../actions/postActions";
 import { storage } from "../../firebase";
+import { isEmpty } from "lodash";
+import { log } from "util";
+
 export class PostForm extends Component {
   constructor(props) {
     super(props);
@@ -30,9 +33,9 @@ export class PostForm extends Component {
     // e.preventDefault();
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
-        // console.log(position.coords);
-        //will just upload a text post
-        if (this.state.post_pic === "" && this.state.text !== "") {
+        //check if both inputs have values
+        if (isEmpty(this.state.post_pic) && this.state.text !== "") {
+          console.log("Will post text not image");
           const newPost = {
             text: this.state.text,
             latitude: position.coords.latitude,
@@ -43,10 +46,13 @@ export class PostForm extends Component {
           this.setState({
             text: "",
             latitude: "",
-            longitude: "",
-            post_pic: "",
-            postImgURL: ""
+            longitude: ""
           });
+        } else if (
+          isEmpty(this.state.post_pic) === false &&
+          this.state.text === ""
+        ) {
+          console.log("Will post new image not text");
         } else {
           const newPost = {
             text: this.state.text,
@@ -68,7 +74,6 @@ export class PostForm extends Component {
             },
             () => {
               console.log("IMAGE UPLOADED");
-
               //what happens whent the postIm has finished uploading
               storage
                 .ref("post_imgs")
@@ -79,13 +84,12 @@ export class PostForm extends Component {
                   console.log(postImgUrl);
                   newPost.postImgURL = postImgUrl;
                   this.props.addPost(newPost);
-
                   // console.log(newPost);
                   this.setState({
                     text: "",
                     latitude: "",
                     longitude: "",
-                    post_pic: "",
+                    post_pic: {},
                     postImgURL: ""
                   });
                 })
@@ -95,6 +99,71 @@ export class PostForm extends Component {
             }
           );
         }
+
+        // if (Object.keys(this.state.post_pic).length ===  && this.state.text !== "") {
+
+        // }
+        // console.log(position.coords);
+        //will just upload a text post
+        // if (this.state.post_pic ===  && this.state.text !== "") {
+        // const newPost = {
+        //   text: this.state.text,
+        //   latitude: position.coords.latitude,
+        //   longitude: position.coords.longitude
+        // };
+        // console.log(newPost);
+        // this.props.addPost(newPost);
+        // this.setState({
+        //   text: "",
+        //   latitude: "",
+        //   longitude: ""
+        // });
+        // } else {
+        //   const newPost = {
+        //     text: this.state.text,
+        //     latitude: position.coords.latitude,
+        //     longitude: position.coords.longitude,
+        //     post_pic: this.state.post_pic,
+        //     postImgURL: ""
+        //   };
+        //   // const uploadTask = storage
+        //   //   .ref(`post_imgs/${newPost.post_pic.name}`)
+        //   //   .put(newPost.post_pic);
+        //   // uploadTask.on(
+        //   //   "state_changed",
+        //   //   snapshot => {
+        //   //     console.log(snapshot);
+        //   //   },
+        //   //   error => {
+        //   //     console.log(error);
+        //   //   },
+        //   //   () => {
+        //   //     console.log("IMAGE UPLOADED");
+        //   //     //what happens whent the postIm has finished uploading
+        //   //     storage
+        //   //       .ref("post_imgs")
+        //   //       .child(newPost.post_pic.name)
+        //   //       .getDownloadURL()
+        //   //       .then(url => {
+        //   //         let postImgUrl = url;
+        //   //         console.log(postImgUrl);
+        //   //         newPost.postImgURL = postImgUrl;
+        //   //         this.props.addPost(newPost);
+        //   //         // console.log(newPost);
+        //   //         this.setState({
+        //   //           text: "",
+        //   //           latitude: "",
+        //   //           longitude: "",
+        //   //           post_pic: "",
+        //   //           postImgURL: ""
+        //   //         });
+        //   //       })
+        //   //       .catch(err => {
+        //   //         console.log(err);
+        //   //       });
+        //   //   }
+        //   // );
+        // }
       });
     }
     // const { user } = this.props.auth;
